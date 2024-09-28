@@ -15,8 +15,8 @@ pipeline {
     stage('Test') {
       steps {
         echo 'Testing...'
-        script {
-          withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]) 
+          withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')])  {
+          sh 'echo "Snyk token is available as $SNYK_TOKEN"'
           def result = snykSecurity(
             snykInstallation: 'Snyk',
             failOnIssues: true,
