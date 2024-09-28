@@ -8,12 +8,14 @@ pipeline {
         steps {
             echo 'Installing dependencies...'
             sh 'npm install --save'
+            sh 'npm audit fix'
         }
     }
 
     stage('Test') {
       steps {
         echo 'Testing...'
+        withCredentials([string(credentialsId: 'snyk-token', variable: 'SNYK_TOKEN')]) 
         script {
           def result = snykSecurity(
             snykInstallation: 'Snyk',
