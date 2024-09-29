@@ -6,34 +6,36 @@ pipeline {
 	} 
   }
 
-  stages {
+stages {
 
-    stage('Build') {
+stage('Build') {
         steps {
             echo 'Installing dependencies...'
             sh 'npm install --save'
             sh 'npm audit fix'
         }
     }
-
-    stage('Test') {
+	  
+stage('Test') {
       steps {
         echo 'Testing...'
+	echo 'Initiating Snyk security scan for vulnerabilities...'
+        sh 'npm install -g snyk'
+	// Directly using the Snyk token for authentication
+        sh 'snyk auth b40e9c90-9ccb-4eb5-b2f8-337a2c3b26de'
+        echo 'Snyk authentication successful.'
         script {
-          def result = snykSecurity(
-            snykInstallation: 'Snyk',
-            snykTokenId: 'b40e9c90-9ccb-4eb5-b2f8-337a2c3b26de',
-            failOnIssues: true,
-            failOnError: true
-          )
-          if (result.issuesFound) {
-            echo 'Snyk found security vulnerabilities'
-          }
+        def snykScanResult = sh(script: 'snyk test --severity-threshold=high', returnStatus: true)
+        if (snykScanResult != 0) {
+        error 'Critical vulnerabilities detected by Snyk! Failing the pipeline.'
+        } else {
+        echo 'Snyk scan completed with no critical vulnerabilities. Proceeding...'
+        }
         }
       }
     }
 
-    stage('Deploy') {
+stage('Deploy') {
       steps {
         echo 'Deploying...'
         sh 'node app.js &'
