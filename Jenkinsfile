@@ -2,7 +2,7 @@ pipeline {
   agent {
     docker { 
 		image 'node:16' 
-		args '-p 8082:8082' //binding port 8082 from app.js in docker to localhost:8082
+		//args '-p 8082:8082' //binding port 8082 from app.js in docker to localhost:8082
 	} 
   }
 
