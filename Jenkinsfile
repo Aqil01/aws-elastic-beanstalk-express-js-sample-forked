@@ -23,7 +23,7 @@ pipeline {
         echo 'Deploying...'
         sh 'node app.js &'
         sh 'sleep 5' // Give the app some time to start
-        sh 'curl http://localhost:8082' // Test if the app is running
+        sh 'curl http://localhost:8082'
       }
     }
   }
