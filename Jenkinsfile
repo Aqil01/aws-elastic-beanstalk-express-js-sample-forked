@@ -15,6 +15,17 @@ pipeline {
     stage('Test') {
       steps {
         echo 'Testing...'
+        script {
+          def result = snykSecurity(
+            snykInstallation: 'Snyk',
+            snykTokenId: 'b40e9c90-9ccb-4eb5-b2f8-337a2c3b26de',
+            failOnIssues: true,
+            failOnError: true
+          )
+          if (result.issuesFound) {
+            echo 'Snyk found security vulnerabilities'
+          }
+        }
       }
     }
 
