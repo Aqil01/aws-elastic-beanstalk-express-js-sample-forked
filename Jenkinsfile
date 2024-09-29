@@ -34,9 +34,9 @@ pipeline {
     }
   }
   
- // post {
-  //  always {
- //     archiveArtifacts artifacts: 'npm-debug.log', allowEmptyArchive: true
- //   }
- // }
+  post {
+    always {
+      archiveArtifacts artifacts: 'npm-debug.log', allowEmptyArchive: true
+    }
+ }
 }
