@@ -2,6 +2,9 @@ pipeline {
   agent {
     docker { image 'node:16' }
   }
+  environment {
+      SNYK_API_TOKEN = credentials('snyk_api_token')  
+  }  
   stages {
 
     stage('Build') {
@@ -9,18 +12,15 @@ pipeline {
             echo 'Installing dependencies...'
             sh 'npm install --save'
             sh 'npm audit fix'
+          	sh 'npm install -g snyk'
+		    	  sh 'snyk auth ${SNYK_API_TOKEN}'
         }
     }
 
     stage('Test') {
       steps {
         echo 'Testing...'
-        snykSecurity(
-          snykInstallation: 'Snyk',
-          snykTokenId: 'b40e9c90-9ccb-4eb5-b2f8-337a2c3b26de',
-          failOnIssues: true,
-          failOnError: true
-        )
+        sh 'snyk test --org=Aqil01 --project-name=21875438_Project2_pipeline --severity-threshold=critical'
       }
     }
 
