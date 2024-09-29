@@ -1,9 +1,11 @@
 pipeline {
   agent {
-    docker { image 'node:16'
-             args '-p 8082:8082' //binding port 8082 from app.js in docker to localhost:8082
-           }
+    docker { 
+		image 'node:16' 
+		args '-p 8082:8082' //binding port 8082 from app.js in docker to localhost:8082
+	} 
   }
+
   stages {
 
     stage('Build') {
@@ -50,4 +52,6 @@ pipeline {
   }
     success {
       echo 'Pipeline executed successfully without any errors'
+}
+  }
 }
