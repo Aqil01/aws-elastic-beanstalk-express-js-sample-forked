@@ -15,6 +15,12 @@ pipeline {
     stage('Test') {
       steps {
         echo 'Testing...'
+        snykSecurity(
+          snykInstallation: 'Snyk',
+          snykTokenId: 'b40e9c90-9ccb-4eb5-b2f8-337a2c3b26de',
+          failOnIssues: true,
+          failOnError: true
+        )
       }
     }
 
@@ -28,9 +34,9 @@ pipeline {
     }
   }
   
-  post {
-    always {
-      archiveArtifacts artifacts: 'npm-debug.log', allowEmptyArchive: true
-    }
-  }
+ // post {
+  //  always {
+ //     archiveArtifacts artifacts: 'npm-debug.log', allowEmptyArchive: true
+ //   }
+ // }
 }
