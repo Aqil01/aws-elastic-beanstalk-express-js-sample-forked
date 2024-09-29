@@ -2,9 +2,7 @@ pipeline {
   agent {
     docker { image 'node:16' }
   }
-  environment {
-      SNYK_API_TOKEN = credentials('snyk_api_token')  
-  }  
+
   stages {
 
     stage('Build') {
@@ -12,15 +10,23 @@ pipeline {
             echo 'Installing dependencies...'
             sh 'npm install --save'
             sh 'npm audit fix'
-          	sh 'npm install -g snyk'
-		    	  sh 'snyk auth ${SNYK_API_TOKEN}'
         }
     }
 
     stage('Test') {
       steps {
         echo 'Testing...'
-        sh 'snyk test --org=Aqil01 --project-name=21875438_Project2_pipeline --severity-threshold=critical'
+        sh 'npm install -g snyk'
+        // Directly using the Snyk token for authentication
+        sh 'snyk auth b40e9c90-9ccb-4eb5-b2f8-337a2c3b26de' 
+        script {
+                def snykScanResult = sh(script: 'snyk test --severity-threshold=critical', returnStatus: true)
+                if (snykScanResult != 0) {
+                error 'Critical vulnerabilities detected by Snyk!'
+                } else {
+                echo 'Snyk scan completed with no critical vulnerabilities.'
+                }
+        }
       }
     }
 
