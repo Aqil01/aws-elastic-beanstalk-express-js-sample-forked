@@ -1,6 +1,8 @@
 pipeline {
   agent {
-    docker { image 'node:16' }
+    docker { image 'node:16'
+             args '-p 8082:8082' //binding port 8082 from app.js in docker to localhost:8082
+           }
   }
   stages {
 
@@ -41,7 +43,11 @@ pipeline {
   
   post {
     always {
-      archiveArtifacts artifacts: 'npm-debug.log', allowEmptyArchive: true
+      echo 'Pipeline execution completed'
     }
+    failure {
+      echo 'Pipeline has failed due to errors, please check logs'
   }
+    success {
+      echo 'Pipeline executed successfully without any errors'
 }
