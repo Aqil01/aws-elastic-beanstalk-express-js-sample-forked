@@ -7,6 +7,7 @@ pipeline {
 
     stage('Build') {
         steps {
+            echo 'Building...'
             echo 'Installing dependencies...'
             sh 'npm install --save'
             sh 'npm audit fix'
